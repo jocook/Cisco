@@ -1,0 +1,37 @@
+#Simple Script to read information out of NXAPI and print it on the Screen; Tested on Nexus 9396PX
+#Author = olcook@cisco.com
+
+import json
+import requests
+
+"""
+Modify these please
+"""
+url='http://10.87.6.210/ins'
+switchuser='admin'
+switchpassword='Cisco321'
+
+myheaders={'content-type':'application/json-rpc'}
+payload=[
+  {
+    "jsonrpc": "2.0",
+    "method": "cli",
+    "params": {
+      "cmd": "show version",
+      "version": 1
+    },
+    "id": 1
+  }
+]
+response = requests.post(url,data=json.dumps(payload), headers=myheaders,auth=(switchuser,switchpassword)).json()
+
+manufacturer = response.json()['result']['body']['manufacturer']
+host_name = response.json()['result']['body']['host_name']
+system_image = response.json()['result']['body']['kick_file_name']
+
+print ("")
+print ("--------------------------------")
+print ('manufacturer: '+ manufacturer)
+print ('host_name: ' + host_name)
+print ('systemimage version: ' + system_image)
+print ("--------------------------------")
